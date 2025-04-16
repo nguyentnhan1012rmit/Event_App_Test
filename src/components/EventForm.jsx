@@ -1,37 +1,42 @@
 // src/components/EventForm.jsx
+
 import axios from 'axios';
 import React, { useState } from 'react';
 
 export default function EventForm({ onClose }) {
   const [eventName, setEventName] = useState('');
+  const [eventType, setEventType] = useState('');
   const [startDateTime, setStartDateTime] = useState('');
   const [endDateTime, setEndDateTime] = useState('');
   const [description, setDescription] = useState('');
+  const [maxParticipants, setMaxParticipants] = useState(50); // Default value
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append('eventName', eventName);
+    formData.append('type', eventType);
     formData.append('startDateTime', startDateTime);
     formData.append('endDateTime', endDateTime);
     formData.append('description', description);
+    formData.append('maxParticipants', maxParticipants); // Add maxParticipants to the form data
     if (image) {
       formData.append('image', image);
     }
-  
-    const token = localStorage.getItem('token'); // ✅ grab token
-  
+
+    const token = localStorage.getItem('token');
+
     try {
-      const response = await axios.post('http://localhost:5000/api/events', formData, {
+      const response = await axios.post('http://localhost:5001/api/events', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`, // ✅ send token
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       console.log('✅ Event created:', response.data);
       setMessage('Event created successfully!');
       onClose();
@@ -42,9 +47,7 @@ export default function EventForm({ onClose }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold text-center">Create New Event</h2>
-
+    <form onSubmit={handleSubmit} className="space-y-4 text-black">
       <label className="block">
         Event Name:
         <input
@@ -52,8 +55,42 @@ export default function EventForm({ onClose }) {
           value={eventName}
           onChange={(e) => setEventName(e.target.value)}
           required
-          className="mt-1 p-2 w-full rounded border border-gray-300"
+          className="mt-1 p-2 w-full rounded border border-gray-300 text-black"
         />
+      </label>
+
+      <label className="block">
+        Event type:
+        <div className="flex justify-center">
+          <div className="flex items-center me-4">
+            <input
+              id="public-event"
+              type="radio"
+              value="public"
+              name="eventType"
+              checked={eventType === 'public'}
+              onChange={(e) => setEventType(e.target.value)}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+            />
+            <label htmlFor="public-event" className="ms-2 font-medium text-black">
+              Public
+            </label>
+          </div>
+          <div className="flex items-center me-4">
+            <input
+              id="private-event"
+              type="radio"
+              value="private"
+              name="eventType"
+              checked={eventType === 'private'}
+              onChange={(e) => setEventType(e.target.value)}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+            />
+            <label htmlFor="private-event" className="ms-2 font-medium text-black">
+              Private
+            </label>
+          </div>
+        </div>
       </label>
 
       <label className="block">
@@ -63,7 +100,7 @@ export default function EventForm({ onClose }) {
           value={startDateTime}
           onChange={(e) => setStartDateTime(e.target.value)}
           required
-          className="mt-1 p-2 w-full rounded border border-gray-300"
+          className="mt-1 p-2 w-full rounded border border-gray-300 text-black"
         />
       </label>
 
@@ -75,7 +112,7 @@ export default function EventForm({ onClose }) {
           onChange={(e) => setEndDateTime(e.target.value)}
           min={startDateTime}
           required
-          className="mt-1 p-2 w-full rounded border border-gray-300"
+          className="mt-1 p-2 w-full rounded border border-gray-300 text-black"
         />
       </label>
 
@@ -85,9 +122,21 @@ export default function EventForm({ onClose }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
-          className="mt-1 p-2 w-full rounded border border-gray-300"
+          className="mt-1 p-2 w-full rounded border border-gray-300 text-black"
         />
       </label>
+
+      <div>
+        <label className="block">Max Participants</label>
+        <input
+          type="number"
+          value={maxParticipants}
+          onChange={(e) => setMaxParticipants(e.target.value)}
+          className="w-full border p-2 rounded"
+          min="1"
+          required
+        />
+      </div>
 
       <label className="block">
         Upload Image:
@@ -95,7 +144,7 @@ export default function EventForm({ onClose }) {
           type="file"
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
-          className="mt-1 block w-full"
+          className="mt-1 block w-full text-black"
         />
       </label>
 

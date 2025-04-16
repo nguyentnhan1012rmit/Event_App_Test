@@ -24,6 +24,24 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ✅ Fetch events where the current user is a participant
+router.get('/joined', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "No token provided" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // Find events where the user is in the participants array
+    const events = await Event.find({ participants: userId }, '-image.data').populate('createdBy', 'name');
+    res.status(200).json(events);
+  } catch (error) {
+    console.error("❌ Failed to fetch joined events:", error);
+    res.status(500).json({ message: 'Failed to fetch joined events', error: error.message });
+  }
+});
+
 // ✅ Delete event (user-owned only)
 router.delete('/:id', async (req, res) => {
   try {

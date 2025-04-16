@@ -24,13 +24,15 @@ router.post('/', upload.single('image'), async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
 
-    const { eventName, startDateTime, endDateTime, description } = req.body;
+    const { eventName, type, startDateTime, endDateTime, description, maxParticipants } = req.body;
 
     const newEvent = new Event({
       eventName,
+      type,
       startDateTime,
       endDateTime,
       description,
+      maxParticipants,
       createdBy: userId
     });
 
@@ -53,11 +55,11 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 /** ===========================================
- * ✅ GET ALL EVENTS (excluding image buffer)
+ * ✅ GET ALL PUBLIC EVENTS (excluding image buffer)
  * =========================================== */
 router.get('/', async (req, res) => {
   try {
-    const events = await Event.find({}, '-image.data'); // exclude binary buffer
+    const events = await Event.find({ type: 'public' }, '-image.data').populate('createdBy', 'name'); // exclude binary buffer
     res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch events', error: error.message });
@@ -103,11 +105,11 @@ router.get('/image/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { eventName, startDateTime, endDateTime, description } = req.body;
+    const { eventName, type, startDateTime, endDateTime, description, maxParticipants } = req.body;
 
     const updatedEvent = await Event.findByIdAndUpdate(
       id,
-      { eventName, startDateTime, endDateTime, description },
+      { eventName, type, startDateTime, endDateTime, description, maxParticipants },
       { new: true }
     );
 

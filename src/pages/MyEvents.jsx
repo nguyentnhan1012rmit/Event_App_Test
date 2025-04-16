@@ -10,7 +10,7 @@ const MyEvents = () => {
     const fetchMyEvents = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.get("http://localhost:5000/api/myevents", {
+        const response = await axios.get("http://localhost:5001/api/myevents", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -31,7 +31,7 @@ const MyEvents = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/myevents/${id}`, {
+      await axios.delete(`http://localhost:5001/api/myevents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,7 +75,7 @@ const MyEvents = () => {
           formData.append("image", file);
 
           try {
-            await axios.put(`http://localhost:5000/api/myevents/${event._id}`, formData, {
+            await axios.put(`http://localhost:5001/api/myevents/${event._id}`, formData, {
               headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
@@ -95,7 +95,7 @@ const MyEvents = () => {
 
     if (choice === "1") {
       try {
-        await axios.put(`http://localhost:5000/api/myevents/${event._id}`, formData, {
+        await axios.put(`http://localhost:5001/api/myevents/${event._id}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -124,7 +124,7 @@ const MyEvents = () => {
             <div key={event._id} className="border p-4 rounded shadow">
               {event.image && (
                 <img
-                  src={`http://localhost:5000/api/events/image/${event._id}`}
+                  src={`http://localhost:5001/api/events/image/${event._id}`}
                   alt={event.eventName || "Event image"}
                   className="h-40 w-full object-cover rounded mb-2"
                   onError={(e) => {

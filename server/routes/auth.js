@@ -3,12 +3,13 @@ import dotenv from 'dotenv';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-const router = express.Router();
 
+const router = express.Router();
 dotenv.config();
-// REGISTER
+
+// ✅ REGISTER
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     const existing = await User.findOne({ email });
@@ -17,7 +18,15 @@ router.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      plainPassword: password, // Optional for admin view
+      role,
+    });
+
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -27,8 +36,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// LOGIN
-// LOGIN
+// ✅ LOGIN
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -41,7 +49,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       {
-        id: user._id, // ✅ Must be "id"
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -49,9 +57,6 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    
-    
-    
 
     res.json({ token });
   } catch (err) {
@@ -60,29 +65,29 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
-  console.log("📥 Incoming registration:", req.body); // <--- Add this
+// ✅ GET CURRENT USER INFO (for frontend)
+router.get('/me', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
   try {
-    const existing = await User.findOne({ email });
-    if (existing) {
-      console.log("⚠️ User already exists");
-      return res.status(400).json({ error: 'User already exists' });
-    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
-    await newUser.save();
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    console.log("✅ New user registered:", newUser);
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar ? true : false, // ✅ Include avatar flag
+    });
   } catch (err) {
-    console.error('❌ Registration error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Failed to fetch user', error: err.message });
   }
 });
-// RESET PASSWORD (Simplified)
+
+// ✅ RESET PASSWORD
 router.post('/reset-password', async (req, res) => {
   const { email, newPassword } = req.body;
 
@@ -96,6 +101,7 @@ router.post('/reset-password', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
+    user.plainPassword = newPassword;
     await user.save();
 
     res.json({ message: 'Password reset successfully' });
@@ -104,6 +110,5 @@ router.post('/reset-password', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 export default router;
