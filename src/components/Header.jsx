@@ -4,16 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
 import EventForm from './EventForm';
 
-export default function Header({ onSearch }) {
+export default function Header() {
   const [user, setUser] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
-
     try {
       const decoded = jwtDecode(token);
       setUser(decoded);
@@ -22,37 +20,57 @@ export default function Header({ onSearch }) {
     }
   }, []);
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    if (onSearch) {
-      onSearch(e.target.value); // Pass the search query to the parent component
-    }
-  };
-
   return (
     <>
-      <header className="flex justify-between items-center px-6 py-4 bg-blue-900 text-white shadow">
-        <div className="flex items-center gap-4">
-          <Link to={'/dashboard'}>
-            <img src="/Logo_light.png" alt="Logo" className="h-8" />
-          </Link>
-          <input
-            type="text"
-            placeholder="Search event"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="px-3 py-1 rounded-md text-black focus:outline-none w-56"
-          />
-        </div>
-        <div className="flex gap-4 items-center">
-          <button type="button" onClick={() => setIsModalOpen(true)} className="bg-white text-blue-900 px-3 py-1 rounded hover:bg-gray-100">
-            Create Event
-          </button>
-          <span className="material-icons">Wallet</span>
-          <span className="material-icons">Dashboard</span>
-          <ProfileDropdown user={user} />
+      <header className="bg-blue-900 text-white shadow px-4 py-4 sm:px-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between relative">
+
+          {/* Mobile & Tablet: Logo on top center */}
+          <div className="flex justify-center md:order-1 lg:hidden">
+            <Link to="/dashboard">
+              <img
+                src="/Logo_light.png"
+                alt="Logo"
+                className="h-14 object-contain"
+              />
+            </Link>
+          </div>
+
+          {/* Desktop: Centered logo */}
+          <div className="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Link to="/dashboard">
+              <img
+                src="/Logo_light.png"
+                alt="Logo"
+                className="h-14 object-contain"
+              />
+            </Link>
+          </div>
+
+          {/* Left: Search bar */}
+          <div className="flex justify-start md:order-2 md:w-1/2 lg:w-1/3">
+            <input
+              type="text"
+              placeholder="Search event"
+              className="px-4 py-2 rounded-md text-black w-full sm:w-64"
+            />
+          </div>
+
+          {/* Right: Nav buttons */}
+          <div className="flex justify-end items-center gap-3 md:order-3 md:w-1/2 lg:w-1/3">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-white text-blue-900 px-3 py-1 rounded-md font-semibold"
+            >
+              Create Event
+            </button>
+            <Link to="/wallet">Wallet</Link>
+            <Link to="/dashboard">Dashboard</Link>
+            <ProfileDropdown user={user} />
+          </div>
         </div>
       </header>
+
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
