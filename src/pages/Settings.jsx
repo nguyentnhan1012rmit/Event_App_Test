@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import toast from 'react-hot-toast';
 
 export default function Settings() {
   const [name, setName] = useState('');
@@ -24,7 +21,7 @@ export default function Settings() {
           setPreview(`/api/user/avatar/${res.data._id}`);
         }
       } catch (err) {
-        toast.error("⚠️ Failed to fetch user info.");
+        alert("⚠️ Failed to fetch user info.");
         console.error('Fetch error:', err);
       }
     };
@@ -35,7 +32,7 @@ export default function Settings() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Name cannot be empty.");
+      alert("Name cannot be empty.");
       return;
     }
 
@@ -53,12 +50,12 @@ export default function Settings() {
         },
       });
 
-      toast.success('✅ Profile updated successfully!');
+      alert('✅ Profile updated successfully!');
       localStorage.setItem('reload', 'true');
       navigate('/dashboard');
     } catch (err) {
       console.error('Failed to update profile:', err);
-      toast.error('❌ Update failed. Please try again.');
+      alert('❌ Update failed. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -74,12 +71,11 @@ export default function Settings() {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4 animate-fade-in">
-      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-10 text-white transition-all duration-300 space-y-8">
-        <h2 className="text-center text-3xl font-extrabold tracking-wide">Edit Profile</h2>
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-10 text-white space-y-8">
+        <h2 className="text-center text-3xl font-bold tracking-wide">Edit Profile 🛠️</h2>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Avatar Preview */}
           <div className="flex justify-center">
             <div className="relative group">
               {preview ? (
@@ -103,7 +99,6 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Name Input */}
           <div>
             <label className="block mb-2 text-lg font-semibold tracking-wide">Your Name</label>
             <input
@@ -115,7 +110,6 @@ export default function Settings() {
             />
           </div>
 
-          {/* Save Button */}
           <button
             type="submit"
             disabled={isSaving || !name.trim()}
@@ -128,7 +122,6 @@ export default function Settings() {
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
 
-          {/* Cancel Button */}
           <button
             type="button"
             onClick={() => {
