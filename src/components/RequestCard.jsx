@@ -18,7 +18,7 @@ export default function RequestCard({ booking, onUpdate }) {
       {/* Event Image */}
       {booking.eventId && (
         <img
-          src={`http://localhost:5001/api/events/image/${booking.eventId._id}`}
+          src={`/api/events/image/${booking.eventId._id}`}
           alt={booking.eventId.eventName}
           className="w-full h-48 object-cover"
           onError={(e) => {

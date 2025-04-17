@@ -11,6 +11,7 @@ import discussionRoutes from './routes/discussions.js';
 import eventRoutes from './routes/event.js'; // Import event routes
 import joinedEventsRoutes from './routes/joinedEvents.js';
 import myEventsRoutes from './routes/myEvents.js';
+import profileRoutes from './routes/profile.js';
 import userRoutes from './routes/user.js';
 
 
@@ -35,7 +36,7 @@ app.use('/api/joinedEvents', joinedEventsRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api', bookingRoutes);
 app.use('/api/user', userRoutes);
-
+app.use('/api/profile', profileRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI)

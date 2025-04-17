@@ -12,7 +12,7 @@ export default function EventDetail() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/events/${id}`);
+        const res = await axios.get(`/api/events/${id}`);
         setEvent(res.data);
       } catch (err) {
         console.error('Error fetching event:', err);
@@ -22,7 +22,7 @@ export default function EventDetail() {
     const fetchComments = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5001/api/discussions/${id}`, {
+        const res = await axios.get(`/api/discussions/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setComments(res.data);
@@ -42,7 +42,7 @@ export default function EventDetail() {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post(
-        `http://localhost:5001/api/discussions/${id}/comment`,
+        `/api/discussions/${id}/comment`,
         { comment: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -72,7 +72,7 @@ export default function EventDetail() {
 
         {event.image && (
           <img
-            src={`http://localhost:5001/api/events/image/${event._id}`}
+            src={`/api/events/image/${event._id}`}
             alt="Event"
             className="w-full rounded-lg mb-4"
           />

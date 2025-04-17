@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import BookingCard from '../components/BookingCard';
 
 export default function MyBookings() {
     const [bookings, setBookings] = useState([]);
@@ -12,7 +11,7 @@ export default function MyBookings() {
         const fetchBookings = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:5001/api/bookings/made', {
+                const res = await axios.get('/api/bookings/made', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setBookings(res.data);
@@ -36,7 +35,7 @@ export default function MyBookings() {
     const handleCancel = async (bookingId) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`, {
+            await axios.delete(`/api/bookings/${bookingId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setBookings((prev) => prev.filter((booking) => booking._id !== bookingId));

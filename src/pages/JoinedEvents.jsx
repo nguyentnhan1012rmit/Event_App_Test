@@ -1,7 +1,6 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 export default function JoinedEvents({ onClose }) {
   const [joinedEvents, setJoinedEvents] = useState([]);
@@ -13,7 +12,7 @@ export default function JoinedEvents({ onClose }) {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:5001/api/myEvents/joined', {
+        const res = await fetch('/api/myEvents/joined', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -41,36 +40,55 @@ export default function JoinedEvents({ onClose }) {
   };
 
   return (
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 text-white flex flex-col">
+      <Header onSearch={handleSearch} />
 
-
-    <>
-      <Header onSearch={handleSearch}/>
-      <div className="bg-white p-6 rounded-lg w-full max-w-lg flex-col m-auto">
-        <h2 className="text-lg font-bold mb-4">Joined Events</h2>
-        {filteredEvents.length === 0 ? (
-          <p>No event fits your search.</p>
-        ) : (
-          <ul className="space-y-2">
-            {filteredEvents.map((event) => (
-              <li key={event._id} className="border p-2 rounded m-2">
-                <img
-                  src={`http://localhost:5001/api/events/image/${event._id}`}
-                  alt={event.eventName}
-                  className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    e.target.src = '/assets/placeholder.png'; // Fallback to placeholder image
-                  }}
-                />
-                <h3 className="font-semibold text-lg mt-2">{event.eventName}</h3>
-                <p className='mt-1'>Organized by: {event.createdBy?.name || 'Unknown'}</p>
-                <p>{new Date(event.startDateTime).toLocaleString()}</p>
-                <p>Current Participants: {event.participants.length} / {event.maxParticipants}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Top Banner */}
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-center py-6 px-4">
+        <h2 className="text-xl font-semibold uppercase">My Joined Events</h2>
       </div>
-      <Footer/>
-    </>
+
+      <main className="flex-grow px-6 py-10">
+        {filteredEvents.length === 0 ? (
+          <p className="text-gray-300 text-center">No event fits your search.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredEvents.map((event) => (
+              <div
+                key={event._id}
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition text-black flex flex-col"
+              >
+                {event.image && (
+                  <img
+                    src={`/api/events/image/${event._id}`}
+                    alt={event.eventName}
+                    className="w-full h-40 object-cover rounded-t-lg"
+                    onError={(e) => {
+                      e.target.src = '/assets/placeholder.png';
+                    }}
+                  />
+                )}
+                <div className="p-4 flex flex-col justify-between flex-grow">
+                  <div>
+                    <h3 className="text-lg font-semibold">{event.eventName}</h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {new Date(event.startDateTime).toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-700 mt-2">
+                      Organized by: {event.createdBy?.name || 'Unknown'}
+                    </p>
+                    <p className="text-sm text-gray-700 mt-1">
+                      Participants: {event.participants.length} / {event.maxParticipants}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+
+      <Footer />
+    </div>
   );
 }

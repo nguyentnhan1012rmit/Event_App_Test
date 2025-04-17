@@ -12,7 +12,7 @@ export default function MyBookings() {
     const fetchRequests = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5001/api/bookings/created', {
+        const res = await axios.get('/api/bookings/created', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRequests(res.data);
@@ -37,7 +37,7 @@ export default function MyBookings() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5001/api/bookings/${bookingId}`,
+        `/api/bookings/${bookingId}`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );

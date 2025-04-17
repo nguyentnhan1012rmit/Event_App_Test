@@ -11,7 +11,7 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5001/api/admin/login', { username, password });
+      await axios.post('/api/admin/login', { username, password });
       navigate('/admin-panel');
     } catch (error) {
       setMessage('Invalid credentials');

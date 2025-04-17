@@ -30,7 +30,7 @@ export default function EventForm({ onClose }) {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await axios.post('http://localhost:5001/api/events', formData, {
+      const response = await axios.post('/api/events', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

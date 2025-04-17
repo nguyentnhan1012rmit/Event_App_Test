@@ -1,4 +1,5 @@
 import React from 'react';
+import { getImageUrl } from '../utils/getImageUrl'; // ✅ import helper (adjust path if needed)
 
 export default function BookingCard({ booking, onCancel }) {
   return (
@@ -6,7 +7,7 @@ export default function BookingCard({ booking, onCancel }) {
       {/* Event Image */}
       {booking.eventId && (
         <img
-          src={`http://localhost:5001/api/events/image/${booking.eventId._id}`}
+          src={getImageUrl(booking.eventId._id)} // ✅ use dynamic URL
           alt={booking.eventId.eventName}
           className="w-full h-48 object-cover"
           onError={(e) => {
@@ -22,7 +23,7 @@ export default function BookingCard({ booking, onCancel }) {
 
         {/* Event Host */}
         <p className="text-sm text-gray-600 mt-1">
-        <span className="font-medium">Event Host:</span> {booking.eventId.createdBy.name}
+          <span className="font-medium">Event Host:</span> {booking.eventId.createdBy.name}
         </p>
 
         {/* Booking Status */}

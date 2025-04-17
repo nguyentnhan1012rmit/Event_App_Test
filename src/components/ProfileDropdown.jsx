@@ -50,7 +50,7 @@ export default function ProfileDropdown() {
 
   const fetchJoinedEvents = async () => {
     const token = localStorage.getItem('token');
-    const res = await axios.get('http://localhost:5001/api/joinedEvents/joined', {
+    const res = await axios.get('/api/joinedEvents/joined', {
       headers: { Authorization: `Bearer ${token}` },
     });
     setJoinedEvents(res.data);
@@ -59,7 +59,7 @@ export default function ProfileDropdown() {
   const fetchCurrentUser = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5001/api/auth/me', {
+      const res = await axios.get('/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCurrentUser(res.data);
@@ -88,7 +88,7 @@ export default function ProfileDropdown() {
       >
         {currentUser?.avatar ? (
           <img
-            src={`http://localhost:5001/api/user/avatar/${currentUser._id}`}
+            src={`/api/user/avatar/${currentUser._id}`}
             alt="Avatar"
             className="w-full h-full object-cover"
           />
@@ -103,7 +103,7 @@ export default function ProfileDropdown() {
           <div className="p-4 text-black text-base border-b flex items-center gap-2 font-semibold">
             {currentUser?.avatar ? (
               <img
-                src={`http://localhost:5001/api/user/avatar/${currentUser._id}`}
+                src={`/api/user/avatar/${currentUser._id}`}
                 alt="Avatar"
                 className="w-8 h-8 rounded-full object-cover"
               />

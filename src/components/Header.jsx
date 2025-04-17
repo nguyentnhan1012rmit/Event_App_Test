@@ -1,8 +1,8 @@
 import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import ProfileDropdown from './ProfileDropdown';
 import EventForm from './EventForm';
+import ProfileDropdown from './ProfileDropdown';
 
 export default function Header() {
   const [user, setUser] = useState(null);

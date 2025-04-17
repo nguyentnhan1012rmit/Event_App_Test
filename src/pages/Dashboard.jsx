@@ -26,7 +26,7 @@ useEffect(() => {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:5001/api/events', {
+        const res = await fetch('/api/events', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -51,7 +51,7 @@ useEffect(() => {
       if (!token) return;
   
       try {
-        const res = await axios.get('http://localhost:5001/api/auth/me', {
+        const res = await axios.get('/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCurrentUserId(res.data._id); // Assuming the API returns the user's ID
@@ -72,7 +72,7 @@ useEffect(() => {
         if (!token) return;
 
         // Make a GET request to fetch bookings made by the user
-        const res = await axios.get(`http://localhost:5001/api/bookings/made`, {
+        const res = await axios.get(`/api/bookings/made`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -95,7 +95,7 @@ useEffect(() => {
   const fetchComments = async (eventId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5001/api/discussions/${eventId}`, {
+      const res = await axios.get(`/api/discussions/${eventId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments(res.data);
@@ -119,7 +119,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.post(
-        `http://localhost:5001/api/discussions/${selectedEvent._id}/comment`,
+        `/api/discussions/${selectedEvent._id}/comment`,
         { comment: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -133,7 +133,7 @@ useEffect(() => {
   const handleDeleteComment = async (commentId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5001/api/discussions/comment/${commentId}`, {
+      await axios.delete(`/api/discussions/comment/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => prev.filter((c) => c._id !== commentId));
@@ -152,7 +152,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.put(
-        `http://localhost:5001/api/discussions/comment/${commentId}`,
+        `/api/discussions/comment/${commentId}`,
         { comment: editedComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -175,7 +175,7 @@ useEffect(() => {
   
       // Make a POST request to the bookings API
       const res = await axios.post(
-        'http://localhost:5001/api/bookings',
+        '/api/bookings',
         { eventId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -208,7 +208,7 @@ useEffect(() => {
             <div key={event._id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition text-black">
               {event.image && (
                 <img
-                  src={`http://localhost:5001/api/events/image/${event._id}`}
+                  src={`/api/events/image/${event._id}`}
                   alt={event.eventName}
                   className="w-full h-40 object-cover rounded-t-lg"
                   onError={(e) => { e.target.src = '/assets/placeholder.png'; }}
@@ -237,7 +237,7 @@ useEffect(() => {
           <div className="bg-white w-full max-w-xl rounded-md shadow-lg">
             {selectedEvent.image && (
               <img
-                src={`http://localhost:5001/api/events/image/${selectedEvent._id}`}
+                src={`/api/events/image/${selectedEvent._id}`}
                 alt={selectedEvent.eventName}
                 className="w-full h-60 object-cover rounded-t-md"
               />
