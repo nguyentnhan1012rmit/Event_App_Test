@@ -48,6 +48,15 @@ export default function Auth() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (activeTab === 'login') {
+      handleLogin();
+    } else {
+      handleRegister();
+    }
+  };
+
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
@@ -91,85 +100,90 @@ export default function Auth() {
           </button>
         </div>
 
-        <div className="mb-3">
-          <label className="block mb-1">Email</label>
-          <input
-            type="email"
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="name@example.com"
-          />
-        </div>
-
-        {activeTab === 'register' && (
+        {/* 🔽 Wrapped in <form> to enable Enter key */}
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="block mb-1">Name</label>
+            <label className="block mb-1">Email</label>
             <input
-              type="text"
+              type="email"
               className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your full name"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
             />
           </div>
-        )}
 
-        <div className="mb-3">
-          <label className="block mb-1">Password</label>
-          <input
-            type="password"
-            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-        </div>
-
-        {activeTab === 'register' && (
-          <div className="mb-4">
-            <label className="block mb-1">Role</label>
-            <div className="flex justify-center space-x-6">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  value="attendee"
-                  name="role"
-                  checked={role === 'attendee'}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-                <span>Attendee</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  value="organizer"
-                  name="role"
-                  checked={role === 'organizer'}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-                <span>Organizer</span>
-              </label>
+          {activeTab === 'register' && (
+            <div className="mb-3">
+              <label className="block mb-1">Name</label>
+              <input
+                type="text"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your full name"
+              />
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'login' && (
-          <div className="text-right text-sm mb-3">
-            <a href="/forgot-password" className="text-blue-400 hover:underline">
-              Forgot Password?
-            </a>
+          <div className="mb-3">
+            <label className="block mb-1">Password</label>
+            <input
+              type="password"
+              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
           </div>
-        )}
 
-        <button
-          className={`w-full py-2 rounded text-white font-semibold mb-3 ${
-            activeTab === 'login' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'
-          }`}
-          onClick={activeTab === 'login' ? handleLogin : handleRegister}
-        >
-          {activeTab === 'login' ? 'Login' : 'Register'}
-        </button>
+          {activeTab === 'register' && (
+            <div className="mb-4">
+              <label className="block mb-1">Role</label>
+              <div className="flex justify-center space-x-6">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="attendee"
+                    name="role"
+                    checked={role === 'attendee'}
+                    onChange={(e) => setRole(e.target.value)}
+                  />
+                  <span>Attendee</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    value="organizer"
+                    name="role"
+                    checked={role === 'organizer'}
+                    onChange={(e) => setRole(e.target.value)}
+                  />
+                  <span>Organizer</span>
+                </label>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'login' && (
+            <div className="text-right text-sm mb-3">
+              <a href="/forgot-password" className="text-blue-400 hover:underline">
+                Forgot Password?
+              </a>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className={`w-full py-2 rounded text-white font-semibold mb-3 ${
+              activeTab === 'login'
+                ? 'bg-blue-600 hover:bg-blue-700'
+                : 'bg-green-600 hover:bg-green-700'
+            }`}
+          >
+            {activeTab === 'login' ? 'Login' : 'Register'}
+          </button>
+        </form>
 
         <div className="text-center text-gray-400">OR</div>
 

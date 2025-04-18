@@ -22,7 +22,8 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (e) => {
+    e.preventDefault(); // ✅ prevent page reload on Enter
     try {
       const res = await axios.post('/api/auth/reset-password', {
         email,
@@ -43,38 +44,41 @@ export default function ForgotPassword() {
           <img src="/Logo_light.png" alt="Logo" className="h-16 object-contain" />
         </div>
 
-        <div className="relative mb-4">
+        <form onSubmit={handleResetPassword}>
+          <div className="relative mb-4">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="absolute left-0 text-sm text-blue-400 hover:underline"
+            >
+              &larr; Back
+            </button>
+            <h2 className="text-xl font-semibold text-center">Reset Password</h2>
+          </div>
+
+          <input
+            type="email"
+            placeholder="Enter your registered email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="password"
+            placeholder="Enter new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
           <button
-            onClick={handleBack}
-            className="absolute left-0 text-sm text-blue-400 hover:underline"
+            type="submit"
+            className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-semibold transition duration-300"
           >
-            &larr; Back
+            Reset Password
           </button>
-          <h2 className="text-xl font-semibold text-center">Reset Password</h2>
-        </div>
-
-        <input
-          type="email"
-          placeholder="Enter your registered email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-
-        <input
-          type="password"
-          placeholder="Enter new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-
-        <button
-          onClick={handleResetPassword}
-          className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-semibold transition duration-300"
-        >
-          Reset Password
-        </button>
+        </form>
 
         {message && (
           <p className="mt-4 text-center text-sm text-green-400">{message}</p>
