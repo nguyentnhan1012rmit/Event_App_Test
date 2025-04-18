@@ -6,7 +6,8 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [isSaved, setIsSaved] = useState(false); // ✅ flag for successful submission
+  const [isSaved, setIsSaved] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // ✅ NEW STATE
   const navigate = useNavigate();
 
   const isDirty = email !== '' || newPassword !== '';
@@ -23,14 +24,14 @@ export default function ForgotPassword() {
   };
 
   const handleResetPassword = async (e) => {
-    e.preventDefault(); // ✅ prevent page reload on Enter
+    e.preventDefault();
     try {
       const res = await axios.post('/api/auth/reset-password', {
         email,
         newPassword,
       });
       setMessage(res.data.message || 'Password reset successfully');
-      setIsSaved(true); // ✅ prevent back warning
+      setIsSaved(true);
     } catch (err) {
       console.error(err);
       setMessage(err.response?.data?.error || 'Something went wrong');
@@ -58,19 +59,28 @@ export default function ForgotPassword() {
 
           <input
             type="email"
-            placeholder="Enter your registered email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          <input
-            type="password"
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full px-4 py-3 mb-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="relative mb-4">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full px-4 py-3 pr-12 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-400 hover:underline"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
 
           <button
             type="submit"

@@ -14,6 +14,7 @@ export default function Auth() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -29,16 +30,8 @@ export default function Auth() {
 
   const handleRegister = async () => {
     try {
-      const res = await axios.post(
-        '/api/auth/register',
-        { name, email, password, role },
-        { withCredentials: true }
-      );
-      const loginRes = await axios.post(
-        '/api/auth/login',
-        { email, password },
-        { withCredentials: true }
-      );
+      await axios.post('/api/auth/register', { name, email, password, role }, { withCredentials: true });
+      const loginRes = await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
       localStorage.setItem('token', loginRes.data.token);
       alert('Registration successful!');
       window.location.href = '/dashboard';
@@ -50,24 +43,7 @@ export default function Auth() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (activeTab === 'login') {
-      handleLogin();
-    } else {
-      handleRegister();
-    }
-  };
-
-  const handleGoogleSuccess = (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log('Google user:', decoded);
-      localStorage.setItem('token', credentialResponse.credential);
-      alert(`Logged in as ${decoded.name}`);
-      window.location.href = '/dashboard';
-    } catch (err) {
-      console.error('Google login error', err);
-      alert('Google login failed');
-    }
+    activeTab === 'login' ? handleLogin() : handleRegister();
   };
 
   return (
@@ -100,47 +76,49 @@ export default function Auth() {
           </button>
         </div>
 
-        {/* 🔽 Wrapped in <form> to enable Enter key */}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="block mb-1">Email</label>
-            <input
-              type="email"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
           {activeTab === 'register' && (
-            <div className="mb-3">
-              <label className="block mb-1">Name</label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your full name"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           )}
 
-          <div className="mb-3">
-            <label className="block mb-1">Password</label>
+          <div className="relative">
             <input
-              type="password"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              required
+              className="w-full px-4 py-3 pr-12 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-400 hover:underline"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
 
           {activeTab === 'register' && (
-            <div className="mb-4">
-              <label className="block mb-1">Role</label>
-              <div className="flex justify-center space-x-6">
+            <div>
+              <label className="block mb-1 text-sm text-gray-400 font-medium">Role</label>
+              <div className="flex justify-center space-x-6 text-sm text-gray-300">
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
@@ -166,7 +144,7 @@ export default function Auth() {
           )}
 
           {activeTab === 'login' && (
-            <div className="text-right text-sm mb-3">
+            <div className="text-right text-sm">
               <a href="/forgot-password" className="text-blue-400 hover:underline">
                 Forgot Password?
               </a>
@@ -175,7 +153,7 @@ export default function Auth() {
 
           <button
             type="submit"
-            className={`w-full py-2 rounded text-white font-semibold mb-3 ${
+            className={`w-full py-2 rounded text-white font-semibold mb-3 transition duration-200 ${
               activeTab === 'login'
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-green-600 hover:bg-green-700'
@@ -189,7 +167,12 @@ export default function Auth() {
 
         <div className="flex justify-center mt-3">
           <GoogleLogin
-            onSuccess={handleGoogleSuccess}
+            onSuccess={(credentialResponse) => {
+              const decoded = jwtDecode(credentialResponse.credential);
+              localStorage.setItem('token', credentialResponse.credential);
+              alert(`Logged in as ${decoded.name}`);
+              window.location.href = '/dashboard';
+            }}
             onError={() => alert('Google Login Failed')}
           />
         </div>
