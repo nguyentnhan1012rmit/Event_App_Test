@@ -35,7 +35,6 @@ export default function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!name.trim()) {
       alert("Name cannot be empty.");
       return;
@@ -98,7 +97,7 @@ export default function Settings() {
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-10 text-white space-y-8">
+      <div className="w-full max-w-xl bg-gray-950 rounded-3xl shadow-2xl p-10 text-white space-y-10 transition-all duration-300">
         <div className="flex justify-between items-center">
           <button
             onClick={handleBack}
@@ -110,45 +109,49 @@ export default function Settings() {
           <div className="w-12" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-10">
+          {/* ✅ Avatar Upload with Zoom + Preview */}
           <div className="flex justify-center">
-            <div className="relative group">
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="Avatar"
-                  className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 group-hover:scale-105 transition-transform duration-300 shadow-md"
-                />
-              ) : (
-                <div className="w-28 h-28 rounded-full bg-gray-700 flex items-center justify-center text-3xl text-white shadow-md">
-                  ?
-                </div>
-              )}
+            <div className="group relative w-36 h-36">
+              <div className="w-full h-full rounded-full border-4 border-blue-500 overflow-hidden shadow-lg transition-transform duration-300 transform group-hover:scale-110 group-hover:ring-4 group-hover:ring-blue-300">
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt="Avatar Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white text-3xl">
+                    ?
+                  </div>
+                )}
+              </div>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleAvatarChange}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                title="Upload New Avatar"
               />
             </div>
           </div>
 
+          {/* Name Input */}
           <div>
-            <label className="block mb-2 text-lg font-semibold tracking-wide">Your Name</label>
+            <label className="block mb-2 text-lg font-semibold tracking-wide text-gray-300">Your Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full px-5 py-3 text-lg rounded-xl bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-5 py-3 text-lg rounded-xl bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-900 transition duration-200"
             />
           </div>
 
+          {/* Save Button */}
           <button
             type="submit"
             disabled={isSaving || !name.trim()}
-            className={`w-full py-3 rounded-xl text-white font-bold text-lg transition ${
+            className={`w-full py-3 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-200 ${
               isSaving || !name.trim()
                 ? 'bg-blue-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700'
@@ -157,10 +160,11 @@ export default function Settings() {
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
 
+          {/* Discard Button */}
           <button
             type="button"
             onClick={handleDiscard}
-            className="w-full py-3 rounded-xl text-white font-bold text-lg bg-red-600 hover:bg-red-700 transition"
+            className="w-full py-3 rounded-xl text-white font-bold text-lg bg-red-600 hover:bg-red-700 shadow-md transition-all duration-200"
           >
             Discard
           </button>
