@@ -1,30 +1,20 @@
-# 📅 EVEMA – Event Management App
+# 📅 Event Management App
 
-EVEMA is a modern full-stack event management web application built using the **MERN Stack**: **MongoDB, Express, React, and Node.js**. It allows users to authenticate (including via Google), create and manage events, book tickets, and access a professional admin dashboard.
-
----
-
-## ✨ Features
-
-- 🔐 User authentication via email and Google OAuth
-- 🗓️ Create, edit, and delete events
-- 🎫 Book and manage tickets
-- 📊 Admin dashboard with event overviews
-- 📱 Responsive design using Tailwind CSS
-- ⚙️ RESTful API services built with Express.js
+Ứng dụng quản lý sự kiện hiện đại được xây dựng với MERN Stack: **MongoDB, Express, React, Node.js**.  
+Hỗ trợ người dùng đăng ký, đăng nhập (kể cả bằng Google), tạo sự kiện, đặt vé và quản trị qua dashboard chuyên nghiệp.
 
 ---
 
-## 🚀 How to Run the Application
+## 🚀 Cách chạy ứng dụng
 
-### 1. Install Dependencies
+### 1. Cài đặt thư viện
 
-#### In the frontend directory:
+#### Ở thư mục gốc (frontend):
 ```bash
 npm install
 ```
 
-#### In the backend (`server`) directory:
+#### Ở thư mục `server` (backend):
 ```bash
 cd server
 npm install
@@ -32,36 +22,36 @@ npm install
 
 ---
 
-### 2. Start the App
+### 2. Chạy ứng dụng
 
-#### Open two terminals:
+#### Mở 2 terminal song song:
 
 🔹 **Terminal 1 – Backend**:
 ```bash
 cd server
 node server.js
 ```
-Runs on: `http://localhost:5001`
+Chạy tại: `http://localhost:5000`
 
 🔹 **Terminal 2 – Frontend**:
 ```bash
 npm run dev
 ```
-Runs on: `http://localhost:5173`
+Chạy tại: `http://localhost:5173`
 
 ---
 
-## 🧩 Adding a New Page (Frontend)
+## 🧩 Cách thêm Trang (Page)
 
-1. Create a new file in `src/pages`, for example:
+1. Tạo file mới trong thư mục `src/pages`, ví dụ:
 ```jsx
 // Contact.jsx
 export default function Contact() {
-  return <h1>Contact Page</h1>;
+  return <h1>Trang Liên hệ</h1>;
 }
 ```
 
-2. Add the route in `App.jsx`:
+2. Thêm route trong `App.jsx`:
 ```jsx
 import Contact from './pages/Contact';
 
@@ -72,21 +62,36 @@ import Contact from './pages/Contact';
 
 ---
 
-## 📦 Adding a New API Endpoint (Backend)
+## 🔐 Thiết lập file `.env`
 
-1. Create a file in `server/routes/`, for example `event.js`:
+Tạo file `.env` trong thư mục `server/` với nội dung:
+
+```
+MONGO_URI=mongodb://localhost:27017/eventDB
+JWT_SECRET=chuoi_bi_mat_bat_ky
+```
+
+📌 File `.env` đã được thêm vào `.gitignore`, không bị đẩy lên GitHub.
+
+---
+
+## 📦 Thêm API mới (Backend)
+
+1. Tạo file mới trong `server/routes/`, ví dụ `event.js`
+
+2. Viết route trong đó:
 ```js
 import express from 'express';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('Event route active');
+  res.send('Sự kiện đang hoạt động');
 });
 
 export default router;
 ```
 
-2. Connect it in `server.js`:
+3. Kết nối trong `server.js`:
 ```js
 import eventRoutes from './routes/event.js';
 app.use('/api/events', eventRoutes);
@@ -94,49 +99,38 @@ app.use('/api/events', eventRoutes);
 
 ---
 
-## 📁 Folder Structure
+## 📁 Cấu trúc thư mục
 
 ```
-evema/
-├── server/                # Backend (Express)
-│   ├── models/            # Mongoose models
-│   ├── routes/            # API routes
-│   ├── .env               # Backend environment variables
-│   └── server.js          # Backend entry point
+event_management_app/
+├── server/                # Backend Express
+│   ├── models/            # Mongoose Models
+│   ├── routes/            # API Routes
+│   ├── .env               # Biến môi trường backend
+│   └── server.js          # Điểm vào backend
 │
-├── src/                   # Frontend (React)
-│   ├── pages/             # Page components (Auth, Dashboard, etc.)
-│   ├── assets/            # Static files, images, icons
-│   ├── App.jsx            # Main app component
+├── src/                   # Frontend React
+│   ├── pages/             # Các trang (Auth, Dashboard,...)
+│   ├── assets/            # Hình ảnh, svg,...
+│   ├── App.jsx            # Gốc ứng dụng React
 │   └── main.jsx
 │
-├── .env                   # Frontend environment variables (optional)
+├── .env                   # (nếu có biến môi trường frontend)
 ├── .gitignore
 ├── README.md
 ├── tailwind.config.js
 └── vite.config.js
 ```
 
+## 🧠 Công nghệ sử dụng
+
+| Công nghệ       | Mục đích                  |
+|----------------|---------------------------|
+| React + Vite   | Frontend nhanh, hiện đại  |
+| Tailwind CSS   | Giao diện UI linh hoạt    |
+| Express.js     | Backend API               |
+| MongoDB        | Cơ sở dữ liệu             |
+| JWT            | Xác thực người dùng       |
+| @react-oauth/google | Đăng nhập bằng Google |
+
 ---
-
-## 👥 Team Contributions
-
-| Member              | Student ID | Role               | Contributions                             |
-|---------------------|------------|--------------------|-------------------------------------------|
-| Nguyen Thanh Nhan   | s4073629   | Frontend Developer | Authentication UI, Tailwind layout        |
-| Nguyen Huu Quoc Huy | s3986423   | Backend Developer  | Event & booking APIs, MongoDB integration |
-| Le Anh Minh         | s4044176   | Fullstack Engineer | Integration, dashboard, deployment        |
-
-
----
-
-## 🧠 Technologies Used
-
-| Technology             | Purpose                                |
-|------------------------|----------------------------------------|
-| React + Vite           | Fast and modern frontend development   |
-| Tailwind CSS           | Utility-first CSS framework            |
-| Node.js + Express.js   | Backend and API management             |
-| MongoDB + Mongoose     | Database and ODM                       |
-| JWT                    | Authentication and token handling      |
-| @react-oauth/google    | Google OAuth integration               |
