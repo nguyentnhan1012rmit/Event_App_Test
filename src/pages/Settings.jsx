@@ -7,6 +7,8 @@ export default function Settings() {
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [originalName, setOriginalName] = useState('');
+  const [originalPreview, setOriginalPreview] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +19,11 @@ export default function Settings() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setName(res.data.name);
+        setOriginalName(res.data.name);
         if (res.data.avatar) {
-          setPreview(`/api/user/avatar/${res.data._id}`);
+          const avatarUrl = `/api/user/avatar/${res.data._id}`;
+          setPreview(avatarUrl);
+          setOriginalPreview(avatarUrl);
         }
       } catch (err) {
         alert("⚠️ Failed to fetch user info.");
@@ -70,10 +75,40 @@ export default function Settings() {
     }
   };
 
+  const handleDiscard = () => {
+    const confirmReset = window.confirm("Discard all changes?");
+    if (confirmReset) {
+      setName(originalName);
+      setPreview(originalPreview);
+      setAvatar(null);
+    }
+  };
+
+  const handleBack = () => {
+    const hasChanges =
+      name !== originalName || (avatar && preview !== originalPreview);
+
+    if (hasChanges) {
+      const confirmLeave = window.confirm("You have unsaved changes. Are you sure you want to go back?");
+      if (!confirmLeave) return;
+    }
+
+    navigate(-1);
+  };
+
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-10 text-white space-y-8">
-        <h2 className="text-center text-3xl font-bold tracking-wide">Edit Profile 🛠️</h2>
+        <div className="flex justify-between items-center">
+          <button
+            onClick={handleBack}
+            className="text-sm text-blue-400 hover:underline"
+          >
+            ← Back
+          </button>
+          <h2 className="text-3xl font-bold tracking-wide">Edit Profile</h2>
+          <div className="w-12" />
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="flex justify-center">
@@ -124,14 +159,10 @@ export default function Settings() {
 
           <button
             type="button"
-            onClick={() => {
-              if (window.confirm("Discard changes and go back?")) {
-                navigate(-1);
-              }
-            }}
+            onClick={handleDiscard}
             className="w-full py-3 rounded-xl text-white font-bold text-lg bg-red-600 hover:bg-red-700 transition"
           >
-            Cancel
+            Discard
           </button>
         </form>
       </div>

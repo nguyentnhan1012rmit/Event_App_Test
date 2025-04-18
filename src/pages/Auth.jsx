@@ -29,14 +29,22 @@ export default function Auth() {
 
   const handleRegister = async () => {
     try {
-      const res = await axios.post('/api/auth/register', { name, email, password, role }, { withCredentials: true });
-      const loginRes = await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
+      const res = await axios.post(
+        '/api/auth/register',
+        { name, email, password, role },
+        { withCredentials: true }
+      );
+      const loginRes = await axios.post(
+        '/api/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
       localStorage.setItem('token', loginRes.data.token);
-      alert("Registration successful!");
-      window.location.href = "/dashboard";
+      alert('Registration successful!');
+      window.location.href = '/dashboard';
     } catch (err) {
-      console.error("Registration error:", err.response?.data || err.message);
-      alert("Registration failed");
+      console.error('Registration error:', err.response?.data || err.message);
+      alert('Registration failed');
     }
   };
 
@@ -56,19 +64,27 @@ export default function Auth() {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-gray-900 rounded-xl shadow-lg p-8 text-white">
+        <div className="flex justify-center mb-6">
+          <img src="/Logo_light.png" alt="Logo" className="h-16 object-contain" />
+        </div>
+
         <h2 className="text-center mb-4 text-2xl font-semibold">
-          {activeTab === 'login' ? 'Welcome Back 👋' : 'Join Us 🚀'}
+          {activeTab === 'login' ? 'Welcome Back' : 'Join Us'}
         </h2>
 
         <div className="flex justify-center mb-4 space-x-6">
           <button
-            className={`pb-1 border-b-2 ${activeTab === 'login' ? 'border-white text-white' : 'text-gray-400'}`}
+            className={`pb-1 border-b-2 ${
+              activeTab === 'login' ? 'border-white text-white' : 'text-gray-400'
+            }`}
             onClick={() => setActiveTab('login')}
           >
             Login
           </button>
           <button
-            className={`pb-1 border-b-2 ${activeTab === 'register' ? 'border-white text-white' : 'text-gray-400'}`}
+            className={`pb-1 border-b-2 ${
+              activeTab === 'register' ? 'border-white text-white' : 'text-gray-400'
+            }`}
             onClick={() => setActiveTab('register')}
           >
             Register
@@ -79,7 +95,7 @@ export default function Auth() {
           <label className="block mb-1">Email</label>
           <input
             type="email"
-            className="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400"
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="name@example.com"
@@ -91,7 +107,7 @@ export default function Auth() {
             <label className="block mb-1">Name</label>
             <input
               type="text"
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400"
+              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your full name"
@@ -103,7 +119,7 @@ export default function Auth() {
           <label className="block mb-1">Password</label>
           <input
             type="password"
-            className="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400"
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
